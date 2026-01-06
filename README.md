@@ -1,6 +1,6 @@
 # MySafe 🛡️ - Gerenciador de Senhas Offline
 
-O **MySafe** é um gerenciador de senhas desktop moderno, leve e seguro, desenvolvido com **Electron**. Ele permite que você armazene suas credenciais localmente com criptografia de nível militar, garantindo que seus dados nunca saiam do seu computador.
+O **MySafe** é um gerenciador de senhas desktop moderno, leve e seguro, desenvolvido com **Electron**. Ele permite que você armazene suas credenciais localmente com criptografia AES-256, garantindo que seus dados nunca saiam do seu computador.
 
 ## ✨ Funcionalidades
 
@@ -27,17 +27,16 @@ O **MySafe** é um gerenciador de senhas desktop moderno, leve e seguro, desenvo
 ### Instalação
 
 1. Clone o repositório:
-   ```bash
-   git clone [https://github.com/gabrielsouzas/password-manager.git](https://github.com/gabrielsouzas/password-manager.git)
-   ```
 
-````
+```bash
+git clone [https://github.com/gabrielsouzas/password-manager.git](https://github.com/gabrielsouzas/password-manager.git)
+```
 
 2. Entre na pasta do projeto:
+
 ```bash
 cd password-manager
-
-````
+```
 
 3. Instale as dependências:
 
@@ -69,8 +68,8 @@ npm run dist
 O projeto utiliza o conceito de **Ponte de Segurança (Preload Script)** do Electron para isolar a interface do sistema de arquivos:
 
 1. **Processo Principal (Main):** Gerencia a persistência dos dados no arquivo `data.json`.
-2. **Preload:** Atua como um garçom seguro, expondo apenas as funções de criptografia necessárias.
-3. **Processo de Renderização (Renderer):** Lida com a UI e garante que a chave master nunca saia da memória volátil durante a sessão.
+<!-- 2. **Preload:** Atua como um garçom seguro, expondo apenas as funções de criptografia necessárias. -->
+2. **Processo de Renderização (Renderer):** Lida com a UI e garante que a chave master nunca saia da memória volátil durante a sessão.
 
 > **Importante:** Se você esquecer sua Senha Master, não há como recuperar os dados, pois o hash SHA-256 é irreversível e a chave AES depende da sua senha.
 
