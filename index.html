@@ -8,28 +8,32 @@
   </head>
   <body>
     <div class="container">
-      <h2>MySafe 🛡️</h2>
+      <div class="header">
+        <img src="assets/icon.ico" alt="MySafe Logo" class="logo" />
+        <h2 class="title"><span>My</span>Safe</h2>
+      </div>
 
       <div id="loginSection" class="card">
         <input type="password" id="masterInput" placeholder="Sua Senha Master" />
-        <button id="btn-login" onclick="handleLogin()">Entrar / Configurar</button>
+        <button id="btn-login" class="btn-login" onclick="handleLogin()">Entrar / Configurar</button>
       </div>
 
       <div id="mainSection" style="display: none">
         <!-- <div id="mainSection"> -->
-        <div class="card">
+        <div class="card add-password-section">
           <h3>Adicionar Nova Senha</h3>
-          <input type="text" id="desc" placeholder="Descrição (ex: Gmail)" />
-          <input type="text" id="url" placeholder="Endereço (ex: google.com)" />
-          <input type="text" id="user" placeholder="Usuário" />
-          <input type="password" id="pass" placeholder="Senha" />
-          <button onclick="addAccount()">Salvar Senha</button>
+          <input type="text" id="desc" placeholder="Descrição (ex: Gmail)" maxlength="50" />
+          <input type="text" id="url" placeholder="Endereço (ex: google.com)" maxlength="300" />
+          <input type="text" id="user" placeholder="Usuário" maxlength="50" />
+          <input type="password" id="pass" placeholder="Senha" maxlength="50" />
+          <button class="btn-save" onclick="addAccount()">Salvar Senha</button>
         </div>
 
-        <input type="text" id="searchInput" placeholder="Pesquisar por descrição, site ou usuário..." onkeyup="search()" />
+        <div id="passwordListSection">
+          <input type="text" id="searchInput" placeholder="Pesquisar por descrição, site ou usuário..." onkeyup="search()" />
 
-        <div id="passwordList"></div>
-        <!-- <div id="passwordList">
+          <div id="passwordList"></div>
+          <!-- <div id="passwordList">
           <div class="card password-item">
             <div class="info">
               <strong>Email Teste</strong><br />
@@ -45,9 +49,22 @@
             </div>
           </div>
         </div> -->
+        </div>
       </div>
     </div>
 
+    <div id="toast"></div>
+
+    <div id="confirmModal" class="modal-overlay">
+      <div class="modal-content">
+        <h3>Excluir Registro</h3>
+        <p>Tem certeza que deseja apagar esta senha? Esta ação não pode ser desfeita.</p>
+        <div class="modal-actions">
+          <button id="cancelBtn" class="btn-light">Cancelar</button>
+          <button id="confirmBtn" class="btn-danger">Excluir</button>
+        </div>
+      </div>
+    </div>
     <script src="renderer.js"></script>
   </body>
 </html>

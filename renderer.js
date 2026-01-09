@@ -37,15 +37,19 @@ function handleLogin() {
 }
 
 function login(password) {
+  if (!password) return showToast('Digite a Senha Master!');
+
+  if (password.length > 30) return showToast('Crie uma senha menor que 30 caracteres!');
+
   const hash = CryptoJS.SHA256(password).toString();
 
   // Se é o primeiro acesso, cria a senha master
   if (!db.masterHash) {
     db.masterHash = hash;
     saveToDisk();
-    alert('Senha Master cadastrada com sucesso!');
+    showToast('Senha Master cadastrada com sucesso!', 'success');
   } else if (db.masterHash !== hash) {
-    alert('Senha Master Incorreta!');
+    showToast('Senha Master Incorreta!');
     return false;
   }
 
@@ -57,8 +61,19 @@ function login(password) {
 
 function showMainApp() {
   document.getElementById('loginSection').style.display = 'none';
-  document.getElementById('mainSection').style.display = 'flex';
-  document.getElementById('mainSection').style.flexDirection = 'column';
+  // document.getElementById('mainSection').style.display = 'flex';
+  // document.getElementById('mainSection').style.flexDirection = 'column';
+
+  const mainSection = document.getElementById('mainSection');
+  mainSection.style.display = 'flex';
+  mainSection.style.flexDirection = 'row';
+  mainSection.style.alignItems = 'flex-start';
+  mainSection.style.gap = '10px';
+
+  // display: flex;
+  // flex-direction: row;
+  // align-items: flex-start;
+  // gap: 10px;
 }
 
 // --- SEGURANÇA ---
@@ -80,7 +95,12 @@ function addAccount() {
   const username = document.getElementById('user').value;
   const password = document.getElementById('pass').value;
 
-  if (!description || !password) return alert('Preencha ao menos Descrição e Senha');
+  if (!description || !password) return showToast('Preencha ao menos Descrição e Senha');
+
+  if (description.length > 50) return showToast('Descrição muito longa! Máximo de 50 caracteres.');
+  if (url.length > 300) return showToast('URL muito longa! Máximo de 300 caracteres.');
+  if (username.length > 50) return showToast('Nome de usuário muito longo! Máximo de 50 caracteres.');
+  if (password.length > 50) return showToast('Senha muito longa! Máximo de 50 caracteres.');
 
   const newAccount = {
     id: Date.now(),
@@ -96,17 +116,45 @@ function addAccount() {
   clearInputs();
 }
 
+// function deleteAccount(id) {
+//   if (confirm('Tem certeza que deseja excluir?')) {
+//     db.accounts = db.accounts.filter((acc) => acc.id !== id);
+//     saveToDisk();
+//     renderPasswords();
+//   }
+// }
+
+// --- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO ---
+let accountIdToDelete = null;
+
 function deleteAccount(id) {
-  if (confirm('Tem certeza que deseja excluir?')) {
-    db.accounts = db.accounts.filter((acc) => acc.id !== id);
+  accountIdToDelete = id; // Guarda o ID que o usuário quer deletar
+  document.getElementById('confirmModal').style.display = 'flex';
+}
+
+// Configura os botões do modal (faça isso fora de qualquer função, no final do arquivo)
+document.getElementById('cancelBtn').onclick = () => {
+  document.getElementById('confirmModal').style.display = 'none';
+  accountIdToDelete = null;
+};
+
+document.getElementById('confirmBtn').onclick = () => {
+  if (accountIdToDelete) {
+    db.accounts = db.accounts.filter((acc) => acc.id !== accountIdToDelete);
     saveToDisk();
     renderPasswords();
+
+    // Feedback visual (usando o toast que criamos antes)
+    if (typeof showToast === 'function') showToast('Registro excluído.', 'success');
   }
-}
+  document.getElementById('confirmModal').style.display = 'none';
+};
+
+// --- COPIAR SENHA ---
 
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text);
-  alert('Senha copiada para a área de transferência!');
+  showToast('Senha copiada para a área de transferência!', 'success');
 }
 
 function clearInputs() {
@@ -136,8 +184,20 @@ function renderPasswords(filter = '') {
     item.className = 'card password-item';
     item.innerHTML = `
             <div class="info">
-                <strong>${acc.description}</strong><br>
-                <span class="url-text">${acc.url}</span> • <small>${acc.username}</small>
+                <strong title="${acc.description}">${acc.description}</strong><br>
+                <span 
+                    class="url-text" 
+                    title="${acc.url}"
+                    onclick="copyTextOnly('${acc.url}')" 
+                    style="cursor: pointer;">
+                    ${acc.url}
+                </span> • 
+                <small 
+                    title="Clique para copiar: ${acc.username}" 
+                    onclick="copyTextOnly('${acc.username}')" 
+                    style="cursor: pointer;">
+                    ${acc.username}
+                </small>
             </div>
             <div class="actions">
                 <button class="btn-icon" title="Copiar Senha" onclick="copyToClipboard('${decrypt(acc.password)}')">
@@ -150,6 +210,38 @@ function renderPasswords(filter = '') {
         `;
     list.appendChild(item);
   });
+}
+
+function copyTextOnly(text) {
+  navigator.clipboard.writeText(text);
+  showToast('Copiado: ' + text, 'info');
+}
+
+// --- TOAST ---
+
+// Mapeamento de cores do toast
+const colors = {
+  success: '#2ed573',
+  error: '#ff4757',
+  info: '#3742fa',
+  warning: '#ffa502',
+};
+
+function showToast(message, type = 'error') {
+  // Vermelho é o padrão se não enviar cor
+  const toast = document.getElementById('toast');
+
+  toast.innerText = message;
+  toast.style.backgroundColor = colors[type] || colors.error;
+
+  toast.className = 'show';
+
+  // Usamos um identificador para o timer para evitar bugs se clicar várias vezes
+  if (toast.timeout) clearTimeout(toast.timeout);
+
+  toast.timeout = setTimeout(() => {
+    toast.className = toast.className.replace('show', '');
+  }, 3000);
 }
 
 // Captura o Enter no campo de Senha Master

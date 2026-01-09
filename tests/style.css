@@ -79,9 +79,9 @@ body {
   text-transform: uppercase;
   font-weight: 600;
 
-  /* max-width: 260px;
+  max-width: 260px;
   min-width: 260px;
-  align-self: center; */
+  align-self: center;
 }
 
 h2,
@@ -225,12 +225,12 @@ button:hover {
   border-radius: 10px;
 }
 
-/* #mainSection {
+#mainSection {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   gap: 10px;
-} */
+}
 
 .add-password-section {
   min-width: 410px;
@@ -254,8 +254,6 @@ small {
   text-overflow: ellipsis; /* Adiciona os ... */
   vertical-align: bottom;
 }
-
-/* Toast Notification */
 
 #toast {
   visibility: hidden;
@@ -322,7 +320,7 @@ small {
   max-width: 400px;
   width: 90%;
   text-align: center;
-  /* border: 1px solid var(--border); */
+  border: 1px solid var(--border);
 }
 
 .modal-actions {
@@ -335,18 +333,7 @@ small {
   background: #6c757d;
   color: white;
 }
-
-.btn-light:hover {
-  background: #515355;
-  color: white;
-}
-
 .btn-danger {
   background: #ff4757;
-  color: white;
-}
-
-.btn-danger:hover {
-  background: #ec1010;
   color: white;
 }

@@ -19,11 +19,12 @@
       "renderer.js",
       "index.html",
       "style.css",
-      "package.json"
+      "package.json",
+      "assets/**" 
     ],
     "win": {
       "target": ["nsis"],
-      "icon": "assets/icone.ico"
+      "icon": "assets/icon.ico"
     },
     "mac": {
       "target": "dmg",
